@@ -10,7 +10,7 @@ begin
     gemspec.email       = "moonmaster9000@gmail.com"
     gemspec.files       = FileList['lib/**/*.rb', 'README.rdoc']
     gemspec.homepage    = "http://github.com/moonmaster9000/chaingang"
-    gemspec.authors     = ["Matt Parker", "Gary Cheong"]
+    gemspec.authors     = ["Matt Parker"]
     gemspec.add_dependency('activeresource', '>= 2.2')
   end
   Jeweler::GemcutterTasks.new
