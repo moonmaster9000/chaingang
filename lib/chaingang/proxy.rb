@@ -22,7 +22,7 @@ module ChainGang
     end
 
     def method_missing(method_name, *args, &block)
-      if args.length == 1 && ends_in_exclamation(method_name)
+      if args.length == 1 && exclamatory?(method_name)
         @params[unexclaim method_name] = args.first
         self
       else
@@ -52,7 +52,7 @@ module ChainGang
       eval "@#{attr}"
     end
 
-    def ends_in_exclamation(string)
+    def exclamatory?(string)
       string.to_s[-1..-1] == "!"
     end
 
