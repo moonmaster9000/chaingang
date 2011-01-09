@@ -36,4 +36,4 @@ Then, go wild:
 
 ## Documentation
 
-Checkout rdoc.info/gems/memories/frames
+Checkout http://rdoc.info/gems/chaingang/frames
