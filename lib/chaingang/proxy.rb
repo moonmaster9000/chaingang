@@ -2,7 +2,10 @@ module ChainGang
   class Proxy
     def initialize(client)
       @client = client
+      @params = {}
     end
+
+    def from(f); @from = f; self; end
 
     def one;    @find_scope = :one;   self; end
     def all;    @find_scope = :all;   self; end
@@ -14,7 +17,21 @@ module ChainGang
       self
     end
 
-    def __find_scope; @find_scope;  end
-    def __client;     @client;      end
+    def and;    self; end
+    def where;  self; end
+
+    def method_missing(method_name, *args, &block)
+      if args.length == 1
+        @params[method_name] = args.first
+      else
+        super method_name, *args, &block
+      end
+      self
+    end
+
+    private 
+    def value(attr)
+      eval "@#{attr}"
+    end
   end
 end
