@@ -21,15 +21,18 @@ First, `include ChainGang` in your ActiveResource::Base derived client class.
 Then, go wild:
 
     # find all the articles 
-    @articles = Article.find.all.from(:published).where.author("moonmaster9000")
+    @articles = Article.find.all.from(:published).where.author("moonmaster9000").and.genre("sci-fi")
     
     # at this point, @articles hasn't actually made the network call yet. 
     @articles.each do |article| # now it's made the network call
       puts article.title
     end
 
-    # or, find a specific article
+    # or, find a specific article. this does not use a proxy.
     @articles = Article.find('moonmaster9000 makes another gem!')
+
+    # or, find the first article by moonmaster9000 and immediately return the result
+    @articles = Article.find.first.where.author("moonmaster9000").execute
 
 ## Documentation
 
