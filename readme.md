@@ -29,7 +29,7 @@ Then, go wild:
     end
 
     # or, find a specific article. this does not use a proxy.
-    @articles = Article.find('moonmaster9000 makes another gem!')
+    @articles = Article.find('some-article-id').from(:published)
 
     # or, find the first article by moonmaster9000 and immediately return the result
     @articles = Article.find.first.where.author("moonmaster9000").execute
