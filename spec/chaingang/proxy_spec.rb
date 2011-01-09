@@ -10,6 +10,10 @@ describe ChainGang do
       it "should set the @client to the calling class" do
         Client.find.send(:value, :client).should == Client
       end
+
+      it "should default @find_scope to :all" do
+        Client.find.send(:value, :find_scope).should == :all
+      end
     end
 
     context "when called with an argument" do
@@ -79,8 +83,6 @@ describe ChainGang do
       end
     end
 
-
-
     describe "#method_missing" do
       before do
         @proxy = Client.find
@@ -88,6 +90,25 @@ describe ChainGang do
 
       it "should allow you to set any parameter" do
         @proxy.food("taco").send(:value, :params)[:food].should == "taco"
+      end
+    end
+
+    describe "#execute" do
+      it "should call the #find_without_chaingang method on the original client class" do
+        Client.should_receive(:find_without_chaingang).with(:all, :from => "/poo", :params => { :hi => 'hi', :yes => 'no' }).and_return([])
+        Client.find.from("/poo").where.hi("hi").and.yes("no").execute
+      end
+    end
+    
+    describe "#each" do
+      before do
+        Dupe.stub 10, :clients
+        @proxy = Client.find.all
+      end
+
+      it "should call #execute" do
+        @proxy.should_receive(:execute).and_return([])
+        @proxy.each {}
       end
     end
   end

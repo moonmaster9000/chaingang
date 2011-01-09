@@ -3,6 +3,7 @@ module ChainGang
     def initialize(client)
       @client = client
       @params = {}
+      @find_scope = :all
     end
 
     def from(f); @from = f; self; end
@@ -29,6 +30,19 @@ module ChainGang
       self
     end
 
+    def each
+      self.execute.each do |result|
+        yield result
+      end
+    end
+
+    def execute
+      options = {}
+      options[:from] = @from if @from
+      options[:params] = @params
+      @client.find_without_chaingang(@find_scope, options)
+    end
+  
     private 
     def value(attr)
       eval "@#{attr}"
