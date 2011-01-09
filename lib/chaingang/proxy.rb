@@ -1,39 +1,43 @@
 module ChainGang
   class Proxy
-    def initialize(client)
+    attr_accessor :find_scope
+
+    def initialize(client, id=nil)
       @client = client
       @params = {}
-      @find_scope = :all
+      @find_scope = id || :all
     end
 
     def from(f); @from = f; self; end
 
-    def one;    @find_scope = :one;   self; end
-    def all;    @find_scope = :all;   self; end
-    def first;  @find_scope = :first; self; end
-    def last;   @find_scope = :last;  self; end
-    
-    def single(id)
-      @find_scope = id
-      self
-    end
+    def first;  self.execute.first; end
+    def last;   self.execute.last;  end
 
     def and;    self; end
     def where;  self; end
 
-    def method_missing(method_name, *args, &block)
-      if args.length == 1
-        @params[method_name] = args.first
-      else
-        super method_name, *args, &block
-      end
+    def param(name, value)
+      @params[name] = value
       self
+    end
+
+    def method_missing(method_name, *args, &block)
+      if args.length == 1 && ends_in_exclamation(method_name)
+        @params[unexclaim method_name] = args.first
+        self
+      else
+        self.execute.send method_name, *args, &block
+      end
     end
 
     def each
       self.execute.each do |result|
         yield result
       end
+    end
+
+    def [](arg)
+      self.execute[arg]
     end
 
     def execute
@@ -46,6 +50,14 @@ module ChainGang
     private 
     def value(attr)
       eval "@#{attr}"
+    end
+
+    def ends_in_exclamation(string)
+      string.to_s[-1..-1] == "!"
+    end
+
+    def unexclaim(string)
+      string.to_s[0..-2].to_sym
     end
   end
 end

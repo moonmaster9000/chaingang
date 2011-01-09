@@ -7,8 +7,8 @@ module ChainGang
   end
 
   module ClassMethods
-    def find_with_chaingang(id=nil)
-      Proxy.new(self).tap {|p| p.single id if id}
+    def find_with_chaingang(find_scope = :all)
+      Proxy.new(self, find_scope)
     end
   end
 end
