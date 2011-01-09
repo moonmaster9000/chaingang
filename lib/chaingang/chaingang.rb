@@ -8,7 +8,11 @@ module ChainGang
 
   module ClassMethods
     def find_with_chaingang(id=nil)
-      Proxy.new(self).tap {|p| p.single(id) if id}
+      if id
+        find_without_chaingang id 
+      else
+        Proxy.new self
+      end
     end
   end
 end

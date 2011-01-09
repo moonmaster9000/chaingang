@@ -3,7 +3,7 @@ require 'chaingang'
 require 'dupe'
 
 class Client < ActiveResource::Base
-  self.site = ''
+  self.site = 'http://localhost'
   include ChainGang
 end
 

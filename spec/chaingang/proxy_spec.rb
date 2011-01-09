@@ -17,17 +17,10 @@ describe ChainGang do
     end
 
     context "when called with an argument" do
-      it "should return a ChainGang::Proxy" do
-        @proxy = Client.find 1
-        @proxy.class.should == ChainGang::Proxy
-      end
-
-      it "should set @client to the calling class" do
-        Client.find.send(:value, :client).should == Client
-      end
-      
-      it "should set @find_scope to the argument" do
-        Client.find('hi').send(:value, :find_scope).should == 'hi'
+      it "should return the result" do
+        Dupe.create :client, :name => 'test 1'
+        @result = Client.find 1
+        @result.name.should == 'test 1' 
       end
     end
   end
