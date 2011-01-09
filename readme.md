@@ -28,11 +28,11 @@ Then, go wild:
       puts article.title
     end
 
-    # or, find a specific article. this does not use a proxy.
-    @articles = Article.find('some-article-id').where.preview_data(true)
+    # or, find a specific article by id, but add a "?preview_data=true" onto the query string.
+    @article = Article.find('some-article-id').where.preview_data(true)
 
     # or, find the first article by moonmaster9000 and immediately return the result
-    @articles = Article.find.first.where.author("moonmaster9000").execute
+    @article = Article.find.first.where.author("moonmaster9000").execute
 
 ## Documentation
 
