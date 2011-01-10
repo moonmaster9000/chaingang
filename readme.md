@@ -20,8 +20,8 @@ First, `include ChainGang` in your ActiveResource::Base derived client class.
 
 Then, go wild:
 
-    # find all the articles 
-    @articles = Article.find.all.from(:published).where.author("moonmaster9000").and.genre("sci-fi")
+    # find all the articles /articles/published.xml?author=moonmaster9000&genre=sci-fi
+    @articles = Article.find(:all).from(:published).where.author!("moonmaster9000").and.genre!("sci-fi")
     
     # at this point, @articles hasn't actually made the network call yet. 
     @articles.each do |article| # now it's made the network call
@@ -29,10 +29,10 @@ Then, go wild:
     end
 
     # or, find a specific article by id, but add a "?preview_data=true" onto the query string.
-    @article = Article.find('some-article-id').where.preview_data(true)
+    @article = Article.find('some-article-id').where.preview_data!(true)
 
-    # or, find the first article by moonmaster9000 and immediately return the result
-    @article = Article.find.first.where.author("moonmaster9000").execute
+    # or, find the first article by moonmaster9000 and get the title; /articles.xml?author=moonmaster9000
+    @article = Article.find(:first).where.author!("moonmaster9000").title
 
 ## Documentation
 
