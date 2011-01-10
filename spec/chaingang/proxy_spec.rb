@@ -63,8 +63,8 @@ describe ChainGang do
         @proxy = Client.find
       end
 
-      it "should set a parameter when you call a method that ends with an exclamation and has exactly one argument" do
-        @proxy.food!("taco").send(:value, :params)[:food].should == "taco"
+      it "should set a parameter when you call a method that ends with a question mark and has exactly one argument" do
+        @proxy.food?("taco").send(:value, :params)[:food].should == "taco"
       end
 
       it "should proxy the method to the executed result otherwise" do
@@ -76,23 +76,23 @@ describe ChainGang do
     describe "#execute" do
       it "should call the #find_without_chaingang method on the original client class" do
         Client.should_receive(:find_without_chaingang).with(:all, :from => "/poo", :params => { :hi => 'hi', :yes => 'no' }).and_return([])
-        Client.find.from("/poo").where.hi!("hi").and.yes!("no").execute
+        Client.find.from("/poo").where.hi?("hi").and.yes?("no").execute
       end
     end
 
-    describe "#param!" do
+    describe "#param?" do
       before do
         @proxy = Client.find
       end
 
       it "should require two arguments: param name and param value" do
-        proc { @proxy.param!                            }.should     raise_exception 
-        proc { @proxy.param! :param_name                }.should     raise_exception 
-        proc { @proxy.param! :param_name, "param value" }.should_not raise_exception 
+        proc { @proxy.param?                            }.should     raise_exception 
+        proc { @proxy.param? :param_name                }.should     raise_exception 
+        proc { @proxy.param? :param_name, "param value" }.should_not raise_exception 
       end
 
       it "should set the parameter" do
-        @proxy.param! :param_name, "param value"
+        @proxy.param? :param_name, "param value"
         @proxy.send(:value, :params)[:param_name].should == "param value"
       end
     end
