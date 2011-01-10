@@ -80,19 +80,19 @@ describe ChainGang do
       end
     end
 
-    describe "#param" do
+    describe "#param!" do
       before do
         @proxy = Client.find
       end
 
       it "should require two arguments: param name and param value" do
-        proc { @proxy.param                            }.should     raise_exception 
-        proc { @proxy.param :param_name                }.should     raise_exception 
-        proc { @proxy.param :param_name, "param value" }.should_not raise_exception 
+        proc { @proxy.param!                            }.should     raise_exception 
+        proc { @proxy.param! :param_name                }.should     raise_exception 
+        proc { @proxy.param! :param_name, "param value" }.should_not raise_exception 
       end
 
       it "should set the parameter" do
-        @proxy.param :param_name, "param value"
+        @proxy.param! :param_name, "param value"
         @proxy.send(:value, :params)[:param_name].should == "param value"
       end
     end

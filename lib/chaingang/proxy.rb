@@ -8,19 +8,30 @@ module ChainGang
       @find_scope = id || :all
     end
 
+    # Specify a custom url path to retrieve send 
+    # the service call to.
+    #     Article.find(:all).from :published
     def from(f); @from = f; self; end
 
-    def first;  self.execute.first; end
-    def last;   self.execute.last;  end
-
+    # Simply improves readability. Does nothing but return self.
+    #     Article.find.where.author!("moonmaster9000").and.published!(true)
     def and;    self; end
+
+    # Simply improves readability. Does nothing but return self.
+    #     Article.find.where.author!("moonmaster9000").and.published!(true)
     def where;  self; end
 
-    def param(name, value)
+    # Suppose you have a parameter name that collides with an existing method.
+    # Simply set it with this param! method:
+    #     Article.find(:all).param!(:from, "New York Times")
+    def param!(name, value)
       @params[name] = value
       self
     end
 
+    # Set the query string parameters on your request by calling them as methods
+    # with an exclamation point at the end. 
+    #     Article.find(:all).where.author!("moonmaster9000") #/articles.xml?author=moonmaster9000
     def method_missing(method_name, *args, &block)
       if args.length == 1 && exclamatory?(method_name)
         @params[unexclaim method_name] = args.first
@@ -30,16 +41,8 @@ module ChainGang
       end
     end
 
-    def each
-      self.execute.each do |result|
-        yield result
-      end
-    end
-
-    def [](arg)
-      self.execute[arg]
-    end
-
+    # Make the service call immediately. 
+    #     Article.find(:all).execute
     def execute
       options = {}
       options[:from] = @from if @from
@@ -48,15 +51,18 @@ module ChainGang
     end
   
     private 
-    def value(attr)
+    # @private
+    def value(attr) #:nodoc:
       eval "@#{attr}"
     end
-
-    def exclamatory?(string)
+    
+    # @private
+    def exclamatory?(string) #:nodoc:
       string.to_s[-1..-1] == "!"
     end
 
-    def unexclaim(string)
+    # @private
+    def unexclaim(string) #:nodoc:
       string.to_s[0..-2].to_sym
     end
   end
