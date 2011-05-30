@@ -32,7 +32,7 @@ module ChainGang
     # allow active resource to execute request with custom xml/json format from default.
     #   Article.find(:all).by?("moonmaster9000").format(:json)
     def format(fmt)
-      @format = fmt
+      @format = fmt.to_sym
       self
     end
 
@@ -61,7 +61,7 @@ module ChainGang
     # execute the request in specified format, then revert it back after the request.
     def execute_with_format
       fmt = @format
-      if fmt && fmt != @client.format.extension
+      if fmt && fmt.to_s != @client.format.extension
         old = @client.format.extension
         @client.format = fmt.to_sym
         result = execute_without_format
