@@ -34,6 +34,9 @@ Then, go wild:
     # or, find the first article by moonmaster9000 and get the title; /articles.xml?author=moonmaster9000
     @article = Article.find(:first).where.author?("moonmaster9000").title
 
+    # to specifiy the reqeust format, you can use format() method, which temporarily set Article.format for this request.
+    @article = Article.find(:first).where.author?("moonmaster9000").format(:json)         # or :xml
+
 ## Documentation
 
 Checkout http://rdoc.info/gems/chaingang/frames

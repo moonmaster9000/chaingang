@@ -131,5 +131,28 @@ describe ChainGang do
         @proxy.each {}
       end
     end
+
+    describe "#format" do
+      before do
+        @proxy = Client.find
+        @client = @proxy.send(:value, :client)
+      end
+
+      it "should not change client.format" do
+        old_fmt = @client.format.extension
+        @proxy.execute
+        @proxy.send(:value, :format).should be_nil
+        @client.format.extension.should == old_fmt
+      end
+
+      it "should set format" do
+        old_fmt = @client.format.extension
+        Client.should_receive(:find_without_chaingang).and_return("world".to_json)
+        
+        @proxy.from("/hello").format(:json).execute
+        @proxy.send(:value, :format).should == :json
+        @client.format.extension.should == old_fmt
+      end
+    end
   end
 end
