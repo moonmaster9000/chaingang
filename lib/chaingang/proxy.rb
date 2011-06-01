@@ -29,6 +29,13 @@ module ChainGang
       self
     end
 
+    # allow active resource to execute request with custom xml/json format from default.
+    #   Article.find(:all).by?("moonmaster9000").format(:json)
+    def format(fmt)
+      @format = fmt.to_sym
+      self
+    end
+
     # Set the query string parameters on your request by calling them as methods
     # with a question mark at the end. 
     #     Article.find(:all).where.author?("moonmaster9000") #/articles.xml?author=moonmaster9000
@@ -49,7 +56,23 @@ module ChainGang
       options[:params] = @params
       @client.find_without_chaingang(@find_scope, options)
     end
-  
+    alias_method :execute_without_format, :execute
+
+    # execute the request in specified format, then revert it back after the request.
+    def execute_with_format
+      fmt = @format
+      if fmt && fmt.to_s != @client.format.extension
+        old = @client.format.extension
+        @client.format = fmt.to_sym
+        result = execute_without_format
+        @client.format = old.to_sym
+        return result
+      else
+        execute_without_format
+      end
+    end
+    alias_method :execute, :execute_with_format
+    
     private 
     # @private
     def value(attr) #:nodoc:
